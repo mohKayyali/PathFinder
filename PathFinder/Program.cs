@@ -47,6 +47,8 @@ public class RTSPathfinding
         if (Result.Count == 0)
             Console.WriteLine("No path found");
 
+        Console.WriteLine("Solution Path :");
+
         while (Result.Count > 0)
         {
             Node current = Result.Pop();
@@ -62,6 +64,7 @@ public class RTSPathfinding
         int rows = map.GetLength(0);
         int cols = map.GetLength(1);
         int[,] copiedMap = new int[rows, cols];
+
 
         
         for (int i = 0; i < rows; i++)
@@ -97,24 +100,33 @@ public class RTSPathfinding
             minCost = node.Cost;
 
             StorePath(startNode);
+            map[node.Y, node.X] = 7;
+            /*Console.WriteLine("Resolved Map:");
+            for (int i = 0; i < 64; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    Console.Write(map[i, j]);
+                }
+                Console.WriteLine();
+            }*/
+
             return;
         }
         var copiedMap = CopyArray(map);
+        copiedMap[node.Y, node.X] = 7;
 
         if (node.X - 1 >=0 && map[node.Y, node.X - 1] == 0)
         {
             node.Next = new Node(node.Y, node.X - 1, node.Cost + 1);
             
-            copiedMap[node.Y, node.X] = 1;
-            
             BuildPath(copiedMap, node.Next, startNode);
         }
+        
         if (node.Y - 1 >= 0 && map[node.Y -1, node.X ] == 0)
         {
             node.Next = new Node(node.Y -1, node.X, node.Cost + 1);
            
-            copiedMap[node.Y, node.X] = 1;
-            
             BuildPath(copiedMap, node.Next, startNode);
         }
 
@@ -122,14 +134,12 @@ public class RTSPathfinding
         {
             node.Next = new Node(node.Y, node.X + 1, node.Cost + 1);
             
-            copiedMap[node.Y, node.X] = 1;
             BuildPath(copiedMap, node.Next, startNode);
         }
         if (node.Y + 1 < maxLength && map[node.Y + 1, node.X] == 0)
         {
             node.Next = new Node(node.Y + 1, node.X, node.Cost + 1);
             
-            copiedMap[node.Y, node.X] = 1;
             BuildPath(copiedMap, node.Next, startNode);
         }
 
@@ -173,7 +183,7 @@ public class RTSPathfinding
 
         array[0, 0] = 0;
         array[dimension - 1, dimension - 1] = 0;
-
+        Console.WriteLine("Original Map:");
         for (int i = 0; i < dimension; i++)
         {
             for (int j = 0; j < dimension; j++)
